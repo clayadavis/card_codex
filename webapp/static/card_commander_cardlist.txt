@@ -1,0 +1,1 @@
+../card_commander_cardlist.txt

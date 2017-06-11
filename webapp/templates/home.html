@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% block head %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/awesomplete/awesomplete.css') }}">
+<style>
+  .title-box, .search-bar, .pager{
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .search-results, .card-detail{
+    max-width: 970px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .search-bar form{
+    display: inline-block;
+  }
+  .card-detail{
+    background-color: wheat;
+    padding: 10px 40px
+  }
+</style>
+{% endblock %}
+{% block body %}
+<div class="title-box">
+  <h1>Card Commander</h1>
+</div>
+<div class="search-bar">
+  <form action="/" method="get">
+    <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
+    <button type="submit">Search</button>
+  </form>
+    <a href="/random"><button>Random card</button></a>
+</div>
+{% if target_card %}
+<div class="card-detail">
+  <h2><a href="{{target_card.url}}">{{target_card.name}}</a></h2>
+  <p>{{target_card.manaCost}} &middot; {{target_card.type}}</p>
+  <p class="card-text">{{target_card.text}}</p>
+</div>
+
+{% endif %}
+{% if similar_cards %}
+<div class="search-results">
+  <h2>Similar cards</h2>
+  <table>
+    <thead><tr>
+      <th>Name</th><th>Mana</th><th>Type</th><th>Text</th>
+    </tr></thead>
+    <tbody>
+    {% for card in similar_cards %}
+      <tr>
+        <td><a href="{{card.url}}">{{card.name}}</a></td>
+        <td>{{card.manaCost}}</td><td>{{card.type}}</td><td>{{card.text}}</td>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="pager">
+  {% if page > 1 %}
+    {% if page > 2 %}
+    <a href="/?card={{target_card_name}}"><button>&lt;&lt;</button></a>
+    {% endif %}
+  <a href="/?card={{target_card_name}}&page={{page-1}}"><button>&lt;</button></a>
+  {% endif %}
+  Page {{page}}
+  <a href="/?card={{target_card_name}}&page={{page+1}}"><button>&gt;</button></a>
+</div>
+{% endif %}
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='vendor/awesomplete/awesomplete.min.js') }}"></script>
+<script>
+function toPage(e){
+  console.log('whoa', e, this)
+  return false
+}
+(function() {
+  var httpRequest;
+  makeRequest('GET', '/static/card_commander_cardlist.txt');
+
+  function successCallback(text){
+    var input = document.getElementById('card-search');
+    new Awesomplete(input, {
+      minChars: 3,
+      maxItems: 10,
+      list: text.split('\n')
+    });
+  }
+
+  function errorCallback(xhr){
+    console.error(xhr);
+  }
+
+  function makeRequest(method, url) {
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+      console.warn('Giving up :( Cannot create an XMLHTTP instance');
+      return false;
+    }
+    httpRequest.onreadystatechange = alertContents;
+    httpRequest.open(method, url);
+    httpRequest.send();
+  }
+
+  function alertContents() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.status === 200) {
+        successCallback(httpRequest.responseText);
+      } else {
+        errorCallback(httpRequest);
+      }
+    }
+  }
+})();
+</script>
+{% endblock %}
