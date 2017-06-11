@@ -10,7 +10,10 @@ import wget
 from gensim import corpora, models, similarities
 
 
-# nltk.download('stopwords')
+#try:
+#    stopwords = set(nltk.corpus.stopwords.words('english'))
+#except LookupError:
+#    nltk.download('stopwords')
 stopwords = set(nltk.corpus.stopwords.words('english'))
 stemmer = nltk.stem.snowball.SnowballStemmer('english')
 
