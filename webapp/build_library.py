@@ -21,18 +21,6 @@ if __name__ == '__main__':
         for card in serie['cards']:
             card_info = _get(card, CARD_FIELDS)
             card_info['set'] = serie_info
-
-            try:
-                serie = card['set']
-                code = serie.get('magicCardsInfoCode') or serie['code']
-                number = card['mciNumber']
-                url = '//magiccards.info/{code}/en/{mciNumber}'.format(
-                    code=code,
-                    mciNumber=card['mciNumber'])
-            except KeyError:
-                url = '//magiccards.info/query?q=%s' % card['name']
-
-            card_info['url'] = url
             cards[card['name']] = card_info
 
     fname = 'card_commander_library.json.gz'

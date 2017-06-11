@@ -33,7 +33,7 @@
 </div>
 {% if target_card %}
 <div class="card-detail">
-  <h2><a href="{{target_card.url}}">{{target_card.name}}</a></h2>
+  <h2><a href="http://magiccards.info/query?q={{target_card.name}}">{{target_card.name}}</a></h2>
   <p>{{target_card.manaCost}} &middot; {{target_card.type}}</p>
   <p class="card-text">{{target_card.text}}</p>
 </div>
@@ -49,7 +49,7 @@
     <tbody>
     {% for card in similar_cards %}
       <tr>
-        <td><a href="{{card.url}}">{{card.name}}</a></td>
+        <td><a href="/?card={{card.name}}">{{card.name}}</a></td>
         <td>{{card.manaCost}}</td><td>{{card.type}}</td><td>{{card.text}}</td>
     {% endfor %}
     </tbody>
