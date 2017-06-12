@@ -41,8 +41,8 @@
 </div>
 {% if target_card %}
 <div class="card-detail">
-  <h2><a href="http://magiccards.info/query?q={{target_card.name}}">{{target_card.name}}</a></h2>
-  <p>{{target_card.manaCost}} &middot; {{target_card.type}}</p>
+  <h2><a href="http://magiccards.info/query?q={{target_card.name | urlencode}}">{{target_card.name}}</a></h2>
+  <p>{{target_card.manaCost | mana}} &middot; {{target_card.type}}</p>
   <p class="card-text">{{target_card.text}}</p>
 </div>
 
@@ -57,7 +57,7 @@
     <tbody>
     {% for card in similar_cards %}
       <tr>
-        <td><a href="/?card={{card.name}}#search">{{card.name}}</a></td>
+        <td><a href="/?card={{card.name | urlencode}}#search">{{card.name}}</a></td>
         <td>{{card.manaCost | mana}}</td><td>{{card.type}}</td><td>{{card.text}}</td>
     {% endfor %}
     </tbody>
@@ -66,12 +66,12 @@
 <div class="pager">
   {% if page > 1 %}
     {% if page > 2 %}
-    <a href="/?card={{target_card_name}}"><button>&lt;&lt;</button></a>
+    <a href="/?card={{target_card_name | urlencode}}"><button>&lt;&lt;</button></a>
     {% endif %}
-  <a href="/?card={{target_card_name}}&page={{page-1}}"><button>&lt;</button></a>
+  <a href="/?card={{target_card_name | urlencode}}&page={{page-1}}"><button>&lt;</button></a>
   {% endif %}
   Page {{page}}
-  <a href="/?card={{target_card_name}}&page={{page+1}}"><button>&gt;</button></a>
+  <a href="/?card={{target_card_name | urlencode}}&page={{page+1}}"><button>&gt;</button></a>
 </div>
 {% endif %}
 {% endblock %}
