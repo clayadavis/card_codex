@@ -62,7 +62,7 @@
   {% if target_card.names | length > 1 %}
   <p>Other side:
     {% for name in target_card.names if name != target_card.name %}
-    <a href="/?card={{name | urlencode}}">{{name}}</a>
+    <a href="/?card={{name | urlencode}}#search">{{name}}</a>
     {% endfor %}
   </p>
   {% endif %}
