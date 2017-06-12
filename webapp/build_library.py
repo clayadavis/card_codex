@@ -15,10 +15,14 @@ if __name__ == '__main__':
     SERIE_FIELDS = ['name', 'code']
     CARD_FIELDS = ['name', 'names', 'manaCost', 'type', 'text',
                    'supertypes', 'types', 'subtypes', 'colorIdentity']
+    SKIP_TYPES = {'Vanguard', 'Scheme', 'Conspiracy'}
 
     for serie in sets:
         serie_info = _get(serie, SERIE_FIELDS)
         for card in serie['cards']:
+            card_types = set(card.get('types', ''))
+            if card_types.intersection(SKIP_TYPES):
+                continue
             card_info = _get(card, CARD_FIELDS)
             card_info['set'] = serie_info
             cards[card['name']] = card_info
