@@ -1,5 +1,6 @@
 import json
 import gzip
+import logging
 import random
 import re
 
@@ -8,8 +9,9 @@ app = Flask(__name__)
 
 from gensim import corpora, models, similarities
 
-from build_models import Similaritron
+from build_models import Similaritron, tokenize
 sim = Similaritron()
+
 ## Routes
 
 @app.template_filter('mana')
@@ -34,7 +36,9 @@ def home():
         N = 10
         context['target_card_name'] = card_name
         try:
-            context['target_card'] = sim.get_card_by_name(card_name)
+            target_card = sim.get_card_by_name(card_name)
+            context['target_card'] = target_card
+            app.logger.debug('%s: %s' % (card_name, tokenize(target_card)))
         except:
             msg = 'Card name not found. Please try again.'
             return render_template('home.html',  error=msg), 404
@@ -60,3 +64,4 @@ def random_card():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    app.logger.setLevel(logging.DEBUG)
