@@ -10,10 +10,10 @@
 </div>
 <div id="search" class="search-bar">
   <ul class="tab">
-    <li class="tablinks active" onclick="openTab(event, 'search-by-card')">Search by card</li>
-    <li class="tablinks" onclick="openTab(event, 'search-by-text')">Search by text</li>
+    <li id="tab-card-search" class="tablinks" onclick="openTab(event, 'search-by-card')">Search by card</li>
+    <li id="tab-text-search" class="tablinks" onclick="openTab(event, 'search-by-text')">Search by text</li>
   </ul>
-  <div id="search-by-card" class="tabcontent active">
+  <div id="search-by-card" class="tabcontent">
     <form action="/" method="get">
       <div>
         <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
@@ -133,6 +133,12 @@ function openTab(evt, contentId) {
   document.getElementById(contentId).className += " active";
   evt.currentTarget.className += " active";
 }
+
+(function(){
+  var searchType = '{{search_type}}' || 'card',
+      openTab = 'tab-' + searchType + '-search';
+  document.getElementById(openTab).click();
+})();
 
 (function() {
   var httpRequest;
