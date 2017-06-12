@@ -2,7 +2,7 @@
 {% block head %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/awesomplete/awesomplete.css') }}">
 <style>
-  .title-box h1{
+  .title-box .heading{
     border: 0;
     margin-bottom: 0;
   }
@@ -12,6 +12,9 @@
   .title-box, .search-bar, .pager{
     text-align: center;
     margin-bottom: 40px;
+  }
+  .search-results .heading{
+    margin-left: 16px;
   }
   .search-results, .card-detail{
     max-width: 970px;
@@ -38,7 +41,7 @@
 {% endblock %}
 {% block body %}
 <div class="title-box">
-  <h1>Card Codex</h1>
+  <h1 class="heading">Card Codex</h1>
   <p class="subtitle">M:tG card similarity search</p>
 </div>
 <div id="search" class="search-bar">
@@ -61,7 +64,7 @@
 {% endif %}
 {% if similar_cards %}
 <div class="search-results">
-  <h2>Similar cards</h2>
+  <h2 class="heading">Similar cards</h2>
   <table>
     <thead><tr>
       <th>Name</th><th>Mana</th><th>Type</th><th>Text</th>
