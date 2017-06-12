@@ -99,14 +99,22 @@ class Similaritron(object):
         return similar_cards[offset:]
 
 
+def make_bigrams(_iter):
+    a, b = itertools.tee(_iter)
+    try:
+        next(b)
+    except StopIteration:
+        return []
+    return [' '.join(pair) for pair in zip(a, b)]
+
+
 def tokenize(card):
     text = card.get('text', '')
 
-    ## Add creature subtypes
-    if 'Creature' in card.get('types', ''):
-        text += ' ' + ' '.join(card.get('subtypes', []))
     ## Remove "Enchant X" on auras; it messes with TF/IDF
-    text = re.sub('Enchant .+\n', ' ', text)
+    text = re.sub(r'Enchant .+\n', ' ', text)
+    ## Remove the "Equip" cost of equipment
+    text = re.sub(r'Equip\W', ' ', text)
     ## Remove case
     text = text.lower()
     ## Replace card name with ~
@@ -119,23 +127,29 @@ def tokenize(card):
     text = re.sub(r'([+-])[\dX*]/([+-])[\dX*]', r'\1X/\2X', text)
     ## genericize numbers
     text = re.sub(r'\d+', 'N', text)
+    ## replace opponent with player
+    text = text.replace('opponent', 'player')
     ## split on punctuation and spaces
     tokens = re.split(r'[\s.,;:—()]+', text)
-    # use only unique tokens?
-    # tokens = set(tokens)
+
     # stem tokens
     stopwords = set(nltk.corpus.stopwords.words('english'))
-    tokens = (stemmer.stem(t) for t in tokens if t and t not in stopwords)
+    # Some stopwords are useful. We should make a custom list at some point.
+    stopwords -= {'has', 'be'}
+    stopwords.update(['equipped'])
 
-    ## The following allows us to singularize certain terms.
-    ## For example, the word 'equip' is way over-represented on equipment
-    counter = collections.Counter(tokens)
-    if counter['equip']:
-        counter['equip'] = 1
+    tokens = [stemmer.stem(t) for t in tokens if t and t not in stopwords]
+    ## Perhaps bigrams shouldn't bridge stopwords?
+    ## e.g. "can't be blocked and has shroud" =/=> "blocked has"
+    bigrams = make_bigrams(tokens)
 
-    tokens = itertools.chain.from_iterable([token] * count for token, count in counter.items())
+    ## Add creature subtypes
+    if 'Creature' in card.get('types', ''):
+        subtypes = [t.lower() for t in card.get('subtypes', [])]
+    else:
+        subtypes = []
 
-    return list(tokens)
+    return tokens + bigrams + subtypes
 
 
 if __name__ == '__main__':
