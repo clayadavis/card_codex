@@ -31,30 +31,48 @@ def params(d):
 @app.route('/')
 def home():
     context = {}
+    N = 10
+
+    try:
+        page = int(request.args.get('page'))
+    except (TypeError, ValueError):
+        page = 1
+    context['page'] = page
+    offset = N * (page - 1)
+
+    filters = {}
+    if request.args.get('ci'):
+        filters['ci'] = request.args.getlist('ci')
+    if filters:
+        context['filters'] = filters
+
     card_name = request.args.get('card')
+    card_text = request.args.get('text')
     if card_name:
-        N = 10
-        context['target_card_name'] = card_name
         try:
             target_card = sim.get_card_by_name(card_name)
             context['target_card'] = target_card
             app.logger.debug('%s: %s' % (card_name, tokenize(target_card)))
-        except:
+            context['similar_cards'] = sim.get_similar_cards(
+                card_name, N, offset, filters)
+        except Exception as e:
+            if app.debug:
+                raise e
             msg = 'Card name not found. Please try again.'
             return render_template('home.html',  error=msg), 404
 
+    elif card_text:
         try:
-            page = int(request.args.get('page'))
-        except (TypeError, ValueError):
-            page = 1
-        context['page'] = page
+            context['target_card'] = {'name': 'Text Search', 'text': card_text}
+            context['similar_cards'] = sim.text_search_similar_cards(
+                card_text, N, offset, filters)
+        except Exception as e:
+            if app.debug:
+                raise e
+            msg = ('Unable to search related cards.'
+                   ' Try rephrasing or expanding your query.')
+            return render_template('home.html',  error=msg), 404
 
-        offset = N * (page - 1)
-        filters = {}
-        if request.args.get('ci'):
-            filters['ci'] = request.args.getlist('ci')
-        context['filters'] = filters
-        context['similar_cards'] = sim.get_similar_cards(card_name, N, offset, filters)
     return render_template('home.html', **context)
 
 @app.route('/random')
@@ -64,4 +82,3 @@ def random_card():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    app.logger.setLevel(logging.DEBUG)

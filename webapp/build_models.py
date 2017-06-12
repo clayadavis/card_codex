@@ -52,6 +52,16 @@ class Similaritron(object):
         return sorted(enumerate(scores),
                 key=itemgetter(1), reverse=True)
 
+    @staticmethod
+    def _match_filters(card, filters=None):
+        if filters is not None:
+            if filters.get('ci'):
+                my_ci = set(this_card.get('colorIdentity', []))
+                selected_ci = set(''.join(filters['ci']))
+                if not my_ci.issubset(selected_ci):
+                    return False
+        return True
+
     def get_card_by_name(self, name):
         return self.cards[self._card_index[self._normalize_card_name(name)]]
 
@@ -67,14 +77,23 @@ class Similaritron(object):
             if is_same_card or not this_card.get('text'):
                 continue
             # Apply filters
-            if filters is not None:
-                if filters.get('ci'):
-                    my_ci = set(this_card.get('colorIdentity', []))
-                    selected_ci = set(''.join(filters['ci']))
-                    if not my_ci.issubset(selected_ci):
-                        continue
+            if not self._match_filters(this_card, filters):
+                continue
             # Pass all filters
             similar_cards.append(this_card)
+            if len(similar_cards) >= N + offset:
+                break
+        return similar_cards[offset:]
+
+    def text_search_similar_cards(self, search_text, N=10, offset=0,
+                                  filters=None):
+        my_card = {'name': 'text search', 'text': search_text}
+        similarity_scores = self._similarity(my_card)
+        similar_cards = []
+        for card_idx, score in similarity_scores:
+            this_card = self.cards[card_idx]
+            if self._match_filters(this_card, filters):
+                similar_cards.append(this_card)
             if len(similar_cards) >= N + offset:
                 break
         return similar_cards[offset:]

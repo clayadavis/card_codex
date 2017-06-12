@@ -1,0 +1,89 @@
+.title-box .heading{
+  border: 0;
+  margin-bottom: 0;
+}
+.subtitle{
+  color: #888;
+}
+.title-box, .search-bar, .pager{
+  text-align: center;
+  margin-bottom: 40px;
+}
+.search-results .heading{
+  margin-left: 16px;
+}
+.search-bar, .search-results, .card-detail{
+  max-width: 970px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.search-bar form{
+  display: inline-block;
+}
+.card-detail{
+  background-color: wheat;
+}
+.card-detail, .error > span{
+  padding: 10px 40px
+}
+.error{
+  margin: 10px 40px;
+}
+.error > span{
+  background-color: #f2dede;
+  color: #a94442;
+}
+.search-results .heading{
+  display: inline-block;
+}
+.filters{
+  margin-top: 24px;
+}
+.pull-right{
+  display: inline-block;
+  float: right;
+}
+
+.tab {
+  overflow: hidden;
+  margin: 0;
+  padding-left: 16px;
+  margin-bottom: -1px;
+}
+
+.tablinks {
+  background-color: inherit;
+  border: 1px solid white;
+  border-bottom: 1px solid lightgray;
+  color: #2196f3;
+  cursor: pointer;
+  float: left;
+  list-style: none;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tablinks:hover {
+  background-color: #DDD;
+  border-color: #DDD;
+}
+
+.tablinks.active {
+  color: #333;
+  border-color: lightgray;
+  border-bottom-color: white;
+}
+
+.tabcontent {
+  display: none;
+  padding: 24px 16px;
+  border: 1px solid #CCC;
+}
+
+.tabcontent.active{
+  display: block;
+}
+
+#text-search{
+  width: 280px;
+}
