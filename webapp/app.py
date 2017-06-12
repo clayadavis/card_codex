@@ -14,7 +14,7 @@ sim = Similaritron()
 
 @app.template_filter('mana')
 def manafy(s):
-    return re.sub('[{}\s]+', '', s)
+    return re.sub('[{}\s]+', '', s or '')
 
 @app.route('/')
 def home():
