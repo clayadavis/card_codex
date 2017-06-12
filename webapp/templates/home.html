@@ -1,53 +1,7 @@
 {% extends "layout.html" %}
 {% block head %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/awesomplete/awesomplete.css') }}">
-<style>
-  .title-box .heading{
-    border: 0;
-    margin-bottom: 0;
-  }
-  .subtitle{
-    color: #888;
-  }
-  .title-box, .search-bar, .pager{
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  .search-results .heading{
-    margin-left: 16px;
-  }
-  .search-results, .card-detail{
-    max-width: 970px;
-    margin-right: auto;
-    margin-left: auto;
-  }
-  .search-bar form{
-    display: inline-block;
-  }
-  .card-detail{
-    background-color: wheat;
-  }
-  .card-detail, .error > span{
-    padding: 10px 40px
-  }
-  .error{
-    margin: 10px 40px;
-  }
-  .error > span{
-    background-color: #f2dede;
-    color: #a94442;
-  }
-  .search-results .heading{
-    display: inline-block;
-  }
-  .filters{
-    margin-top: 24px;
-  }
-  .pull-right{
-    display: inline-block;
-    float: right;
-  }
-</style>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='home.css') }}">
 {% endblock %}
 {% block body %}
 <div class="title-box">
@@ -55,19 +9,34 @@
   <p class="subtitle">M:tG card similarity search</p>
 </div>
 <div id="search" class="search-bar">
-  <form action="/" method="get">
-    <div>
-      <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
-      <button type="submit">Search</button>
-      <a href="/random"><button type="button">Random card</button></a>
-    </div>
-  </form>
+  <ul class="tab">
+    <li class="tablinks active" onclick="openTab(event, 'search-by-card')">Search by card</li>
+    <li class="tablinks" onclick="openTab(event, 'search-by-text')">Search by text</li>
+  </ul>
+  <div id="search-by-card" class="tabcontent active">
+    <form action="/" method="get">
+      <div>
+        <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
+        <button type="submit">Search</button>
+        <a href="/random"><button type="button">Random card</button></a>
+      </div>
+    </form>
+  </div>
+  <div id="search-by-text" class="tabcontent">
+    <form action="/" method="get">
+      <div>
+        <label><input id="text-search" name="text" type="text" placeholder="Enter some card text"></label>
+        <button type="submit">Search</button>
+      </div>
+    </form>
+  </div>
   {% if error %}
   <div class="error"><span>{{error}}</span></div>
   {% endif %}
 </div>
 {% if target_card %}
 <div class="card-detail">
+{% if search_type == 'card' %}
   <h2><a href="http://magiccards.info/query?q={{target_card.name | urlencode}}">{{target_card.name}}</a></h2>
   <p>{{target_card.manaCost | mana}} &middot; {{target_card.type}}</p>
   <p class="card-text">{{target_card.text}}</p>
@@ -78,6 +47,10 @@
     {% endfor %}
   </p>
   {% endif %}
+{% else %}
+  <h2>Text search</h2>
+  <h3>{{target_card.name}}</h3>
+{% endif %}
 </div>
 
 {% endif %}
@@ -86,7 +59,7 @@
   <h2 class="heading">Similar cards</h2>
   <div class="pull-right">
     <form name="filters" class="filters">
-      <input type="hidden" name="card" value="{{target_card.name}}">
+      <input type="hidden" name="{{search_type}}" value="{{target_card.name}}">
       <div>
         Color identity:
         {% macro has_filter(attr, val) -%}
@@ -121,12 +94,12 @@
 <div class="pager">
   {% if page > 1 %}
     {% if page > 2 %}
-    <a href="/?card={{target_card_name | urlencode}}{{filters | params}}"><button>&lt;&lt;</button></a>
+    <a href="/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}"><button>&lt;&lt;</button></a>
     {% endif %}
-    <a href="/?card={{target_card_name | urlencode}}{{filters | params}}&page={{page-1}}"><button>&lt;</button></a>
+    <a href="/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}&page={{page-1}}"><button>&lt;</button></a>
   {% endif %}
   Page {{page}}
-  <a href="/?card={{target_card_name | urlencode}}{{filters | params}}&page={{page+1}}"><button>&gt;</button></a>
+  <a href="/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}&page={{page+1}}"><button>&gt;</button></a>
 </div>
 {% endif %}
 {% endblock %}
@@ -137,6 +110,30 @@ function toPage(e){
   console.log('whoa', e, this)
   return false
 }
+
+function openTab(evt, contentId) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    //tabcontent[i].style.display = "none";
+    tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  //document.getElementById(contentId).style.display = "block";
+  document.getElementById(contentId).className += " active";
+  evt.currentTarget.className += " active";
+}
+
 (function() {
   var httpRequest;
   makeRequest('GET', '/static/card_commander_cardlist.txt');
