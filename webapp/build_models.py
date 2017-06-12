@@ -81,10 +81,14 @@ class Similaritron(object):
 
 
 def tokenize(card):
-    text = ' '.join([card.get('text', '')]
-                   # + card.get('types', [])
-                   + card.get('subtypes', [])
-                    )
+    text = card.get('text', '')
+
+    ## Add creature subtypes
+    if 'Creature' in card.get('types', ''):
+        text += ' ' + ' '.join(card.get('subtypes', []))
+    ## Remove "Enchant X" on auras; it messes with TF/IDF
+    text = re.sub('Enchant .+\n', ' ', text)
+    ## Remove case
     text = text.lower()
     ## Replace card name with ~
     text = text.replace(card['name'].lower(), '~')
