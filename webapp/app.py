@@ -50,6 +50,7 @@ def home():
     card_text = request.args.get('text')
     if card_name:
         try:
+            context['search_type'] = 'card'
             target_card = sim.get_card_by_name(card_name)
             context['target_card'] = target_card
             app.logger.debug('%s: %s' % (card_name, tokenize(target_card)))
@@ -62,8 +63,9 @@ def home():
             return render_template('home.html',  error=msg), 404
 
     elif card_text:
+        context['search_type'] = 'text'
         try:
-            context['target_card'] = {'name': 'Text Search', 'text': card_text}
+            context['target_card'] = {'name': card_text}
             context['similar_cards'] = sim.text_search_similar_cards(
                 card_text, N, offset, filters)
         except Exception as e:

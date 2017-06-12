@@ -56,7 +56,7 @@ class Similaritron(object):
     def _match_filters(card, filters=None):
         if filters is not None:
             if filters.get('ci'):
-                my_ci = set(this_card.get('colorIdentity', []))
+                my_ci = set(card.get('colorIdentity', []))
                 selected_ci = set(''.join(filters['ci']))
                 if not my_ci.issubset(selected_ci):
                     return False
