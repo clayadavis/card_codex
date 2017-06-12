@@ -55,7 +55,7 @@ class Similaritron(object):
     def get_card_by_name(self, name):
         return self.cards[self._card_index[self._normalize_card_name(name)]]
 
-    def get_similar_cards(self, target_card_name, N=10, offset=0):
+    def get_similar_cards(self, target_card_name, N=10, offset=0, filters=None):
         target_card = self.get_card_by_name(target_card_name)
         similarity_scores = self._similarity(target_card)
         similar_cards = []
@@ -64,8 +64,17 @@ class Similaritron(object):
             is_same_card = (self._normalize_card_name(this_card['name']) ==
                             self._normalize_card_name(target_card_name))
             # Exclude identical and vanilla cards
-            if not is_same_card and this_card.get('text'):
-                similar_cards.append(this_card)
+            if is_same_card or not this_card.get('text'):
+                continue
+            # Apply filters
+            if filters is not None:
+                if filters.get('ci'):
+                    my_ci = set(this_card.get('colorIdentity', []))
+                    selected_ci = set(''.join(filters['ci']))
+                    if not my_ci.issubset(selected_ci):
+                        continue
+            # Pass all filters
+            similar_cards.append(this_card)
             if len(similar_cards) >= N + offset:
                 break
         return similar_cards[offset:]

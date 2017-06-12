@@ -16,6 +16,16 @@ sim = Similaritron()
 def manafy(s):
     return re.sub('[{}\s]+', '', s or '')
 
+@app.template_filter('params')
+def params(d):
+    def vals():
+        for param in d:
+            for val in d[param]:
+                yield '%s=%s' % (param, val)
+    s = '&'.join(vals())
+    return '&' + s if s else ''
+
+
 @app.route('/')
 def home():
     context = {}
@@ -36,7 +46,11 @@ def home():
         context['page'] = page
 
         offset = N * (page - 1)
-        context['similar_cards'] = sim.get_similar_cards(card_name, N, offset)
+        filters = {}
+        if request.args.get('ci'):
+            filters['ci'] = request.args.getlist('ci')
+        context['filters'] = filters
+        context['similar_cards'] = sim.get_similar_cards(card_name, N, offset, filters)
     return render_template('home.html', **context)
 
 @app.route('/random')

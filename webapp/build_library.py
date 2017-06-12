@@ -14,7 +14,7 @@ if __name__ == '__main__':
     cards = {}
     SERIE_FIELDS = ['name', 'code']
     CARD_FIELDS = ['name', 'names', 'manaCost', 'type', 'text',
-                   'supertypes', 'types', 'subtypes']
+                   'supertypes', 'types', 'subtypes', 'colorIdentity']
 
     for serie in sets:
         serie_info = _get(serie, SERIE_FIELDS)

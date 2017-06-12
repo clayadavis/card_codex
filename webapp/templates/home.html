@@ -37,6 +37,16 @@
     background-color: #f2dede;
     color: #a94442;
   }
+  .search-results .heading{
+    display: inline-block;
+  }
+  .filters{
+    margin-top: 24px;
+  }
+  .pull-right{
+    display: inline-block;
+    float: right;
+  }
 </style>
 {% endblock %}
 {% block body %}
@@ -46,10 +56,12 @@
 </div>
 <div id="search" class="search-bar">
   <form action="/" method="get">
-    <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
-    <button type="submit">Search</button>
+    <div>
+      <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
+      <button type="submit">Search</button>
+      <a href="/random"><button type="button">Random card</button></a>
+    </div>
   </form>
-  <a href="/random"><button>Random card</button></a>
   {% if error %}
   <div class="error"><span>{{error}}</span></div>
   {% endif %}
@@ -72,6 +84,25 @@
 {% if similar_cards %}
 <div class="search-results">
   <h2 class="heading">Similar cards</h2>
+  <div class="pull-right">
+    <form name="filters" class="filters">
+      <input type="hidden" name="card" value="{{target_card.name}}">
+      <div>
+        Color identity:
+        {% macro has_filter(attr, val) -%}
+          {{'checked' if filters and val in filters[attr] else ''-}}
+        {% endmacro -%}
+        {% macro filter_checkbox(attr, val) -%}
+        <label>{{val}} <input type="checkbox" name="{{attr}}" value="{{val}}" {{has_filter(attr, val)}}></label>
+        {% endmacro -%}
+        {% for color in 'WUBRG' -%}
+        {{ filter_checkbox('ci', color) -}}
+        {% endfor %}
+        <button type="submit" style="margin-left: 8px; margin-right: 16px;">Filter</button>
+      </div>
+      {% if page > 1 %}<input type="hidden" name="page" value={{page}}>{% endif %}
+    </form>
+  </div>
   <table>
     <thead><tr>
       <th>Name</th><th>Mana</th><th>Type</th><th>Text</th>
@@ -90,12 +121,12 @@
 <div class="pager">
   {% if page > 1 %}
     {% if page > 2 %}
-    <a href="/?card={{target_card_name | urlencode}}"><button>&lt;&lt;</button></a>
+    <a href="/?card={{target_card_name | urlencode}}{{filters | params}}"><button>&lt;&lt;</button></a>
     {% endif %}
-  <a href="/?card={{target_card_name | urlencode}}&page={{page-1}}"><button>&lt;</button></a>
+    <a href="/?card={{target_card_name | urlencode}}{{filters | params}}&page={{page-1}}"><button>&lt;</button></a>
   {% endif %}
   Page {{page}}
-  <a href="/?card={{target_card_name | urlencode}}&page={{page+1}}"><button>&gt;</button></a>
+  <a href="/?card={{target_card_name | urlencode}}{{filters | params}}&page={{page+1}}"><button>&gt;</button></a>
 </div>
 {% endif %}
 {% endblock %}
