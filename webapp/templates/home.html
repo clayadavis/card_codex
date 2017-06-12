@@ -59,6 +59,13 @@
   <h2><a href="http://magiccards.info/query?q={{target_card.name | urlencode}}">{{target_card.name}}</a></h2>
   <p>{{target_card.manaCost | mana}} &middot; {{target_card.type}}</p>
   <p class="card-text">{{target_card.text}}</p>
+  {% if target_card.names | length > 1 %}
+  <p>Other side:
+    {% for name in target_card.names if name != target_card.name %}
+    <a href="/?card={{name | urlencode}}">{{name}}</a>
+    {% endfor %}
+  </p>
+  {% endif %}
 </div>
 
 {% endif %}
