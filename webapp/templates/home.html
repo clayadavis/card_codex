@@ -58,7 +58,7 @@
     {% for card in similar_cards %}
       <tr>
         <td><a href="/?card={{card.name}}#search">{{card.name}}</a></td>
-        <td>{{card.manaCost}}</td><td>{{card.type}}</td><td>{{card.text}}</td>
+        <td>{{card.manaCost | mana}}</td><td>{{card.type}}</td><td>{{card.text}}</td>
     {% endfor %}
     </tbody>
   </table>

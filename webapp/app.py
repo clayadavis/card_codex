@@ -1,6 +1,7 @@
 import json
 import gzip
 import random
+import re
 
 from flask import Flask, render_template, redirect, request, Response
 app = Flask(__name__)
@@ -10,6 +11,10 @@ from gensim import corpora, models, similarities
 from build_models import Similaritron
 sim = Similaritron()
 ## Routes
+
+@app.template_filter('mana')
+def manafy(s):
+    return re.sub('[{}\s]+', '', s)
 
 @app.route('/')
 def home():
