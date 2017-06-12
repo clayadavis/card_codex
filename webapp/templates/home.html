@@ -32,7 +32,7 @@
   <h1>Card Codex</h1>
   <p class="subtitle">M:tG card similarity search</p>
 </div>
-<div class="search-bar">
+<div id="search" class="search-bar">
   <form action="/" method="get">
     <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
     <button type="submit">Search</button>
@@ -57,7 +57,7 @@
     <tbody>
     {% for card in similar_cards %}
       <tr>
-        <td><a href="/?card={{card.name}}">{{card.name}}</a></td>
+        <td><a href="/?card={{card.name}}#search">{{card.name}}</a></td>
         <td>{{card.manaCost}}</td><td>{{card.type}}</td><td>{{card.text}}</td>
     {% endfor %}
     </tbody>
