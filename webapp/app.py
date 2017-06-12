@@ -23,7 +23,11 @@ def home():
     if card_name:
         N = 10
         context['target_card_name'] = card_name
-        context['target_card'] = sim.get_card_by_name(card_name)
+        try:
+            context['target_card'] = sim.get_card_by_name(card_name)
+        except:
+            msg = 'Card name not found. Please try again.'
+            return render_template('home.html',  error=msg), 404
 
         try:
             page = int(request.args.get('page'))

@@ -23,7 +23,16 @@
   }
   .card-detail{
     background-color: wheat;
+  }
+  .card-detail, .error > span{
     padding: 10px 40px
+  }
+  .error{
+    margin: 10px 40px;
+  }
+  .error > span{
+    background-color: #f2dede;
+    color: #a94442;
   }
 </style>
 {% endblock %}
@@ -37,7 +46,10 @@
     <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
     <button type="submit">Search</button>
   </form>
-    <a href="/random"><button>Random card</button></a>
+  <a href="/random"><button>Random card</button></a>
+  {% if error %}
+  <div class="error"><span>{{error}}</span></div>
+  {% endif %}
 </div>
 {% if target_card %}
 <div class="card-detail">
