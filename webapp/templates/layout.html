@@ -1,12 +1,44 @@
 <!doctype html>
 <title>Card Codex</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/marx.min.css') }}">
+<style>
+  .social{
+    font-size: smaller;
+    margin: 8px;
+    display: inline;
+  }
+  .social:hover .img-link{
+    text-decoration: none;
+    opacity: 0.5;
+  }
+  .social-logo{
+    max-height: 24px;
+    max-width: 24px;
+  }
+</style>
 {# <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"> #}
 {% block head %}{% endblock %}
 <body>
   {% block body %}{% endblock %}
   <footer>
-    {% block footer %}{% endblock %}
+    {% block footer %}
+    <ul>
+      <li class="social">
+        &copy;2017
+        <a href="//www.clayadavis.net">Clayton A Davis</a>
+      </li>
+      <li class="social">
+        <a class="img-link" href="https://github.com/clayadavis/card_codex">
+          <img class="social-logo" src="{{ url_for('static', filename='img/octocat.svg') }}" alt="Fork me on GitHub" />
+        </a>
+      </li>
+      <li class="social">
+        <a class="img-link" href="https://twitter.com/clayadavis">
+          <img class="social-logo" src="{{ url_for('static', filename='img/twitter.svg') }}" alt="@clayadavis on Twitter" />
+        </a>
+      </li>
+    </ul>
+    {% endblock %}
   </footer>
 </body>
 {% block js %}{% endblock %}

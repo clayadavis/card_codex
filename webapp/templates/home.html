@@ -2,6 +2,13 @@
 {% block head %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/awesomplete/awesomplete.css') }}">
 <style>
+  .title-box h1{
+    border: 0;
+    margin-bottom: 0;
+  }
+  .subtitle{
+    color: #888;
+  }
   .title-box, .search-bar, .pager{
     text-align: center;
     margin-bottom: 40px;
@@ -23,6 +30,7 @@
 {% block body %}
 <div class="title-box">
   <h1>Card Codex</h1>
+  <p class="subtitle">M:tG card similarity search</p>
 </div>
 <div class="search-bar">
   <form action="/" method="get">
