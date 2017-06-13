@@ -3,6 +3,19 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/awesomplete/awesomplete.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='home.css') }}">
 {% endblock %}
+
+{% macro card_text(card) %}
+{{card.text}}
+{% if card.power %}<span class="p-t">{{card.power}}/{{card.toughness}}</span>{% endif %}
+{% if card.loyalty %}<span class="loyalty">Loyalty {{card.loyalty}}</span>{% endif %}
+{% endmacro %}
+
+{% macro filter_checkbox(attr, val) -%}
+<label>{{val}}
+  <input type="checkbox" name="{{attr}}" value="{{val}}" {{'checked' if filters and val in filters[attr] else ''}}>
+</label>
+{% endmacro -%}
+
 {% block body %}
 <div class="title-box">
   <h1 class="heading">Card Codex</h1>
@@ -34,12 +47,13 @@
   <div class="error"><span>{{error}}</span></div>
   {% endif %}
 </div>
+
 {% if target_card %}
 <div class="card-detail">
 {% if search_type == 'card' %}
   <h2><a href="http://magiccards.info/query?q={{target_card.name | urlencode}}">{{target_card.name}}</a></h2>
   <p>{{target_card.manaCost | mana}} &middot; {{target_card.type}}</p>
-  <p class="card-text">{{target_card.text}}</p>
+  <p class="card-text">{{card_text(target_card)}}</p>
   {% if target_card.names | length > 1 %}
   <p>Other side:
     {% for name in target_card.names if name != target_card.name %}
@@ -52,8 +66,8 @@
   <h3>{{target_card.name}}</h3>
 {% endif %}
 </div>
-
 {% endif %}
+
 {% if similar_cards %}
 <div class="search-results">
   <h2 class="heading">Similar cards</h2>
@@ -62,12 +76,6 @@
       <input type="hidden" name="{{search_type}}" value="{{target_card.name}}">
       <div>
         Color identity:
-        {% macro has_filter(attr, val) -%}
-          {{'checked' if filters and val in filters[attr] else ''-}}
-        {% endmacro -%}
-        {% macro filter_checkbox(attr, val) -%}
-        <label>{{val}} <input type="checkbox" name="{{attr}}" value="{{val}}" {{has_filter(attr, val)}}></label>
-        {% endmacro -%}
         {% for color in 'WUBRG' -%}
         {{ filter_checkbox('ci', color) -}}
         {% endfor %}
@@ -85,7 +93,7 @@
       <tr>
         <td><a href="/?card={{card.name | urlencode}}#search">{{card.name}}</a></td>
         <td>{{card.manaCost | mana}}</td><td>{{card.type}}</td>
-        <td>{{card.text}}</td>
+        <td>{{card_text(card)}}</td>
       </tr>
     {% endfor %}
     </tbody>
@@ -106,11 +114,6 @@
 {% block js %}
 <script src="{{ url_for('static', filename='vendor/awesomplete/awesomplete.min.js') }}"></script>
 <script>
-function toPage(e){
-  console.log('whoa', e, this)
-  return false
-}
-
 function openTab(evt, contentId) {
   // Declare all variables
   var i, tabcontent, tablinks;

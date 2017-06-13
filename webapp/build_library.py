@@ -14,7 +14,8 @@ if __name__ == '__main__':
     cards = {}
     SERIE_FIELDS = ['name', 'code']
     CARD_FIELDS = ['name', 'names', 'manaCost', 'type', 'text',
-                   'supertypes', 'types', 'subtypes', 'colorIdentity']
+                   'supertypes', 'types', 'subtypes', 'colorIdentity',
+                   'power', 'toughness', 'loyalty']
     SKIP_TYPES = {'Vanguard', 'Scheme', 'Conspiracy'}
 
     for serie in sets:
