@@ -141,6 +141,11 @@ function openTab(evt, contentId) {
   var searchType = '{{search_type}}' || 'card',
       openTab = 'tab-' + searchType + '-search';
   document.getElementById(openTab).click();
+
+  var cardInput = document.getElementById('card-search');
+  cardInput.addEventListener('awesomplete-selectcomplete', function(e){
+    e.target.form.submit();
+  });
 })();
 
 (function() {
