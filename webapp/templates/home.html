@@ -27,7 +27,7 @@
     <li id="tab-text-search" class="tablinks" onclick="openTab(event, 'search-by-text')">Search by text</li>
   </ul>
   <div id="search-by-card" class="tabcontent">
-    <form action="/" method="get">
+    <form action="/#search" method="get">
       <div>
         <label><input id="card-search" name="card" type="text" placeholder="Enter a card name"></label>
         <button type="submit">Search</button>
@@ -36,7 +36,7 @@
     </form>
   </div>
   <div id="search-by-text" class="tabcontent">
-    <form action="/" method="get">
+    <form action="/#search" method="get">
       <div>
         <label><input id="text-search" name="text" type="text" placeholder="Enter some card text"></label>
         <button type="submit">Search</button>
@@ -105,14 +105,17 @@
   </table>
 </div>
 <div class="pager">
+{%- macro page_href(num=1) -%}
+/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}{{'&page=%i' % num if num > 1 else ''}}#search
+{%- endmacro -%}
   {% if page > 1 %}
     {% if page > 2 %}
-    <a href="/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}"><button>&lt;&lt;</button></a>
+    <a href="{{page_href()}}"><button>&lt;&lt;</button></a>
     {% endif %}
-    <a href="/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}&page={{page-1}}"><button>&lt;</button></a>
+    <a href="{{page_href(page-1)}}"><button>&lt;</button></a>
   {% endif %}
   Page {{page}}
-  <a href="/?{{search_type}}={{target_card.name | urlencode}}{{filters | params}}&page={{page+1}}"><button>&gt;</button></a>
+  <a href="{{page_href(page+1)}}"><button>&gt;</button></a>
 </div>
 {% endif %}
 {% endblock %}
