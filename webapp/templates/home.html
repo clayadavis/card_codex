@@ -158,7 +158,7 @@ function openTab(evt, contentId) {
 
 (function() {
   var httpRequest;
-  makeRequest('GET', '/static/card_commander_cardlist.txt');
+  makeRequest('GET', "{{ url_for('static', filename='card_commander_cardlist.txt') }}");
 
   function successCallback(text){
     var input = document.getElementById('card-search');
