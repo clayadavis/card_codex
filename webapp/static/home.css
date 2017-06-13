@@ -1,3 +1,12 @@
+ul.list-inline{
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.list-inline > li{
+  display: inline;
+}
+
 .title-box .heading{
   border: 0;
   margin-bottom: 0;
@@ -26,6 +35,15 @@
   display: inline-block;
 }
 
+.card-links,
+.card-title > .card-name{
+  display: inline-block;
+}
+
+.card-links{
+  margin-left: 40px;
+}
+
 .card-detail, .error > span{
   padding: 10px 40px
 }
@@ -33,6 +51,11 @@
 .card-detail{
   background-color: wheat;
   padding-bottom: 16px;
+}
+
+.card-text .loyalty, .card-text .p-t{
+  margin-top: 16px;
+  display: block;
 }
 
 .error{
