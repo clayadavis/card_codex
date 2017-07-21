@@ -54,7 +54,7 @@
   <div class="card-title">
     <h2 class="card-name">{{target_card.name}}</h2>
     <ul class="card-links list-inline">
-      <li><a href="https://scryfall.com/search?q=!{{target_card.name | urlencode}}">Scryfall</a></li>
+      <li><a href="https://scryfall.com/search?q={{target_card.name | urlencode}}">Scryfall</a></li>
     </ul>
   </div>
   <p>{{target_card.manaCost | mana}} &middot; {{target_card.type}}</p>
