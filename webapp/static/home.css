@@ -16,6 +16,14 @@ ul.list-inline > li{
   color: #888;
 }
 
+.news{
+  display: inline-block;
+  background-color: #F8F8F8;
+  border: 1px solid #ECC;
+  font-size: smaller;
+  padding: 0.5em 1em;
+}
+
 .title-box, .search-bar, .pager{
   text-align: center;
   margin-bottom: 40px;

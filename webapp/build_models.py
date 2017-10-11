@@ -2,6 +2,7 @@ import collections
 import gzip
 import itertools
 import json
+import os
 import re
 from operator import itemgetter
 
@@ -10,19 +11,22 @@ import wget
 from gensim import corpora, models, similarities
 
 
+LIBRARY_DIR = 'library'
+MODEL_DIR = 'models'
+
+LIBRARY =    os.path.join(LIBRARY_DIR, 'card_codex_library.json.gz')
+DICTIONARY = os.path.join(MODEL_DIR,   'card_text_dictionary.dict')
+CORPUS =     os.path.join(MODEL_DIR,   'card_text_corpus.mm')
+INDEX =      os.path.join(MODEL_DIR,   'card_text_lsi.index')
+TFIDF =      os.path.join(MODEL_DIR,   'card_text_tfidf.model')
+LSI =        os.path.join(MODEL_DIR,   'card_text_lsi.model')
+
 #try:
 #    stopwords = set(nltk.corpus.stopwords.words('english'))
 #except LookupError:
 #    nltk.download('stopwords')
 stopwords = set(nltk.corpus.stopwords.words('english'))
 stemmer = nltk.stem.snowball.SnowballStemmer('english')
-
-LIBRARY = 'card_commander_library.json.gz'
-DICTIONARY = 'card_text_dictionary.dict'
-CORPUS = 'card_text_corpus.mm'
-INDEX = 'card_text_lsi.index'
-TFIDF = 'card_text_tfidf.model'
-LSI = 'card_text_lsi.model'
 
 
 class Similaritron(object):
@@ -153,6 +157,9 @@ def tokenize(card):
 
 
 if __name__ == '__main__':
+    if not os.path.isdir(MODEL_DIR):
+        os.mkdir(MODEL_DIR)
+
     cards = json.load(gzip.open(LIBRARY, 'rt'))
 
     card_names = [c['name'] for c in cards]

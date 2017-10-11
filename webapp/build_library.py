@@ -1,12 +1,21 @@
 import gzip
 import json
-
+import os
 import requests
+
+
+DIR_NAME = 'library'
 
 def _get(d, fields):
     return {k:d[k] for k in fields if k in d}
 
 if __name__ == '__main__':
+    try:
+        os.chdir(DIR_NAME)
+    except FileNotFoundError:
+        os.mkdir(DIR_NAME)
+        os.chdir(DIR_NAME)
+
     url = 'https://mtgjson.com/json/AllSetsArray.json.gz'
     resp = requests.get(url)
     sets = json.loads(gzip.decompress(resp.content).decode('utf8'))
@@ -28,9 +37,9 @@ if __name__ == '__main__':
             card_info['set'] = serie_info
             cards[card['name']] = card_info
 
-    fname = 'card_commander_library.json.gz'
+    fname = 'card_codex_library.json.gz'
     json.dump(list(cards.values()), gzip.open(fname, 'wt'))
 
-    fname = 'card_commander_cardlist.txt'
+    fname = 'card_codex_cardlist.txt'
     with open(fname, 'wt') as f:
         f.write('\n'.join(sorted(cards.keys())))

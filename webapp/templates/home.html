@@ -20,6 +20,9 @@
 <div class="title-box">
   <h1 class="heading">Card Codex</h1>
   <p class="subtitle">M:tG card similarity search</p>
+  <div class="news">
+    11 Oct 2017: Card library updated to include Ixalan
+  </div>
 </div>
 <div id="search" class="search-bar">
   <ul class="tab">
@@ -54,7 +57,7 @@
   <div class="card-title">
     <h2 class="card-name">{{target_card.name}}</h2>
     <ul class="card-links list-inline">
-      <li><a href="https://scryfall.com/search?q=!{{target_card.name | urlencode}}">Scryfall</a></li>
+      <li><a href="https://scryfall.com/search?q={{target_card.name | urlencode}}">Scryfall</a></li>
     </ul>
   </div>
   <p>{{target_card.manaCost | mana}} &middot; {{target_card.type}}</p>
@@ -158,7 +161,7 @@ function openTab(evt, contentId) {
 
 (function() {
   var httpRequest;
-  makeRequest('GET', "{{ url_for('static', filename='card_commander_cardlist.txt') }}");
+  makeRequest('GET', "{{ url_for('static', filename='card_codex_cardlist.txt') }}");
 
   function successCallback(text){
     var input = document.getElementById('card-search');
