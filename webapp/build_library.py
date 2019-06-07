@@ -16,30 +16,25 @@ if __name__ == '__main__':
         os.mkdir(DIR_NAME)
         os.chdir(DIR_NAME)
 
-    url = 'https://mtgjson.com/json/AllSetsArray.json.gz'
+    url = 'https://mtgjson.com/json/AllCards.json.gz'
     resp = requests.get(url)
-    sets = json.loads(gzip.decompress(resp.content).decode('utf8'))
+    cards = json.loads(gzip.decompress(resp.content).decode('utf8'))
 
-    cards = {}
-    SERIE_FIELDS = ['name', 'code']
-    CARD_FIELDS = ['name', 'names', 'manaCost', 'type', 'text',
-                   'supertypes', 'types', 'subtypes', 'colorIdentity',
+    library = {}
+    CARD_FIELDS = ['name', 'scryfallId', 'printings',
+                   'text', 'manaCost', 'colorIdentity',
+                   'type', 'types', 'supertypes', 'subtypes',
                    'power', 'toughness', 'loyalty']
     SKIP_TYPES = {'Vanguard', 'Scheme', 'Conspiracy'}
 
-    for serie in sets:
-        serie_info = _get(serie, SERIE_FIELDS)
-        for card in serie['cards']:
-            card_types = set(card.get('types', ''))
-            if card_types.intersection(SKIP_TYPES):
-                continue
-            card_info = _get(card, CARD_FIELDS)
-            card_info['set'] = serie_info
-            cards[card['name']] = card_info
+    for name, card in cards.items():
+        card_types = set(card.get('types', ''))
+        if not card_types.intersection(SKIP_TYPES):
+            library[name] = _get(card, CARD_FIELDS)
 
     fname = 'card_codex_library.json.gz'
-    json.dump(list(cards.values()), gzip.open(fname, 'wt'))
+    json.dump(list(library.values()), gzip.open(fname, 'wt'))
 
     fname = 'card_codex_cardlist.txt'
     with open(fname, 'wt') as f:
-        f.write('\n'.join(sorted(cards.keys())))
+        f.write('\n'.join(sorted(library.keys())))

@@ -162,8 +162,6 @@ if __name__ == '__main__':
 
     cards = json.load(gzip.open(LIBRARY, 'rt'))
 
-    card_names = [c['name'] for c in cards]
-
     # nltk.download('stopwords')
     # stopwords = set(nltk.corpus.stopwords.words('english'))
     # stemmer = nltk.stem.snowball.SnowballStemmer('english')
