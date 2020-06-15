@@ -7,7 +7,6 @@ import re
 from operator import itemgetter
 
 import nltk.stem, nltk.corpus
-import wget
 from gensim import corpora, models, similarities
 
 
