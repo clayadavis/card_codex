@@ -1,3 +1,4 @@
+import argparse
 import gzip
 import json
 import os
@@ -11,11 +12,12 @@ def _get(d, fields):
     return {k:d[k] for k in fields if k in d}
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('json')
+    args = parser.parse_args()
 
-    # url = 'https://mtgjson.com/json/AllCards.json.gz'
-    # resp = requests.get(url)
-    # cards = json.loads(gzip.decompress(resp.content).decode('utf8'))
-    cards = json.load(gzip.open('AllCards.json.gz'))
+    cards = json.load(gzip.open(args.json, 'rt'))
+    cards = cards['data']
 
     library = {}
     CARD_FIELDS = ['name', 'scryfallId', 'printings',
@@ -24,10 +26,13 @@ if __name__ == '__main__':
                    'power', 'toughness', 'loyalty']
     SKIP_TYPES = {'Vanguard', 'Scheme', 'Conspiracy'}
 
-    for name, card in cards.items():
-        card_types = set(card.get('types', ''))
-        if not card_types.intersection(SKIP_TYPES):
-            library[name] = _get(card, CARD_FIELDS)
+    for card_name, faces in cards.items():
+        for face in faces:
+            card_types = set(face.get('types', ''))
+            if 'faceName' in face:
+                face['name'] = face.pop('faceName')
+            if not card_types.intersection(SKIP_TYPES):
+                library[face['name']] = _get(face, CARD_FIELDS)
 
     if not os.path.isdir(DIR_NAME):
         os.mkdir(DIR_NAME)
