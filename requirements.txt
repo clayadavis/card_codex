@@ -1,6 +1,0 @@
-wheel
-flask
-gensim
-nltk
-python-Levenshtein
-wget
