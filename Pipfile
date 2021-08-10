@@ -9,6 +9,7 @@ gensim = "*"
 nltk = "*"
 wget = "*"
 python-levenshtein = "*"
+gunicorn = "*"
 
 [dev-packages]
 
