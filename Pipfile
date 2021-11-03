@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 Flask = "*"
 gensim = "*"
-nltk = "*"
+nltk = ">=3.6.4"
 wget = "*"
 python-levenshtein = "*"
 gunicorn = "*"
