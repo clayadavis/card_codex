@@ -1,0 +1,21 @@
+[Unit]
+Description=card_codex gunicorn daemon
+Requires=card_codex.socket
+After=network.target
+
+[Service]
+PIDFile=/run/card_codex/pid
+User=gunicorn
+Group=www-data
+RuntimeDirectory=gunicorn
+WorkingDirectory=/srv/card_codex/webapp
+ExecStart=/srv/card_codex/.venv/bin/gunicorn \
+          --pid /run/card_codex/pid \
+          --bind unix:/run/card_codex/socket \
+          app:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

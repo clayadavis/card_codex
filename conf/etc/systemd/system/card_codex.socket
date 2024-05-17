@@ -1,0 +1,8 @@
+[Unit]
+Description=card codex gunicorn socket
+
+[Socket]
+ListenStream=/run/card_codex/socket
+
+[Install]
+WantedBy=sockets.target
