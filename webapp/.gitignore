@@ -1,0 +1,7 @@
+*.json.gz
+*.txt
+*.index
+*.model
+*.projection
+*.mm
+*.dict
